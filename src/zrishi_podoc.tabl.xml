@@ -79,6 +79,7 @@
      <DATATYPE>CHAR</DATATYPE>
      <LENG>000004</LENG>
      <MASK>  CHAR</MASK>
+     <DDTEXT>Company Code</DDTEXT>
     </DD03P>
     <DD03P>
      <TABNAME>ZRISHI_PODOC</TABNAME>
