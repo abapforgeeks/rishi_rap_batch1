@@ -1,0 +1,25 @@
+@Metadata.layer: #CORE
+@UI: {
+    headerInfo: {
+        description: {
+            value: 'PurchaseDesc',
+            type: #STANDARD
+        },
+        title: {
+            value: 'PurchaseDocument',
+            type: #STANDARD
+        },
+        typeName: 'Purchase Document',
+        typeNamePlural: 'Purchase Documents'
+    }
+}
+annotate view ZC_Rishi_PurchaseDocReport
+    with 
+{
+    @UI.lineItem: [{ position: 10,importance: #HIGH,label: 'Purchase Document' }]
+    PurchaseDocument;
+    @UI.lineItem: [{ position: 20,importance: #HIGH,label: 'Description' }]
+    PurchaseDesc;
+    
+    
+}

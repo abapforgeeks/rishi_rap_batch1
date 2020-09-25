@@ -19,6 +19,7 @@ association[1..1] to I_UnitOfMeasure as _QuantityMeasure on $projection.Unit = _
     vendor as Vendor,
     @Semantics.amount.currencyCode: 'currency'
     price as Price,
+    (price * quantity) as TotalPrice,
     @Semantics.currencyCode: true
     currency as Currency,
     
