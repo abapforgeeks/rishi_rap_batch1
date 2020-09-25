@@ -8,9 +8,12 @@ define view ZI_Rishi_PurchaseDocTotalPrice
   association[0..*] to I_Currency as _Currency on $projection.Currency = _Currency.Currency
 {
   key PurchaseDocument,
+  @Semantics.amount.currencyCode: 'Currency'
       sum( _PurchaseItems.TotalPrice ) as TotalPrice,
-      _PurchaseItems.Currency     as Currency,
+  @Semantics.currencyCode: true
+        _PurchaseItems.Currency     as Currency,
       PurchaseDesc,
+      @Consumption.valueHelpDefinition: [{ entity:{ name : 'zc_rishi_POStatusVH'} }]
       PurchaseStatus,
       PurchasePrio,
 
