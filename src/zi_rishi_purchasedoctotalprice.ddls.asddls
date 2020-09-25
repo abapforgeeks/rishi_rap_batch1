@@ -13,7 +13,6 @@ define view ZI_Rishi_PurchaseDocTotalPrice
   @Semantics.currencyCode: true
         _PurchaseItems.Currency     as Currency,
       PurchaseDesc,
-      @Consumption.valueHelpDefinition: [{ entity:{ name : 'zc_rishi_POStatusVH'} }]
       PurchaseStatus,
       PurchasePrio,
 
