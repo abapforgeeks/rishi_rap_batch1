@@ -1,0 +1,34 @@
+unmanaged implementation in class zbp_i_rishi_purchasedoc_u unique;
+
+define behavior for ZI_RISHI_PURCHASEDOC_U //alias <alias_name>
+//late numbering
+//lock master
+//etag master <field_name>
+{
+
+  create;
+  update;
+  delete;
+
+mapping for zrishi_podoc{
+
+PurchaseDocument = po_document;
+PurchaseDesc = po_desc;
+PurchaseStatus = po_status;
+PurchasePrio = po_priority;
+CreatedBy = create_by;
+CreatedOn = created_date_time;
+ChangedBy = changed_date_time;
+
+  }
+}
+
+//define behavior for ZI_RISHI_PurchaseItems_U //alias <alias_name>
+////late numbering
+////lock dependent by <association>
+////etag master <field_name>
+//{
+//  create;
+//  update;
+//  delete;
+//}
