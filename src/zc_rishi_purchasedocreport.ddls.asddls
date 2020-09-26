@@ -8,9 +8,11 @@ define view ZC_Rishi_PurchaseDocReport
   as select from ZI_Rishi_PurchaseDocTotalPrice
 {
       //ZI_Rishi_PurchaseDocTotalPrice
+      @ObjectModel.text.element: ['PurchaseDesc']
   key PurchaseDocument,
       TotalPrice,
       Currency,
+      @Semantics.text: true
       PurchaseDesc,
       @Consumption.valueHelpDefinition: [{ entity:{ name : 'zc_rishi_POStatusVH',element: 'status'} }]
 
