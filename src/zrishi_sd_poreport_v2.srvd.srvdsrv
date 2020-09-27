@@ -1,0 +1,11 @@
+@EndUserText.label: 'Purchase Document Transactional App'
+define service Zrishi_sd_poreport_v2 {
+  expose ZC_RISHI_PurchaseDoc;
+  expose ZC_Rishi_PurchaseItems;
+  expose ZI_RISHI_PURCHASEDOC_U;
+  expose ZI_RISHI_PurchaseItems_U;
+  expose ZI_Rishi_PurchaseDocTotalPrice;
+  expose ZI_Rishi_PurchasePriority;
+  expose ZI_Rishi_PurchaseStatus;
+  expose zc_rishi_POStatusVH;
+}

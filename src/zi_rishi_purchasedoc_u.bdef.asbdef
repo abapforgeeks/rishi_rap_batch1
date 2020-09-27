@@ -9,6 +9,8 @@ define behavior for ZI_RISHI_PURCHASEDOC_U //alias <alias_name>
   create;
   update;
   delete;
+  field(readonly ) PurchaseDocument,TotalPrice,Currency;
+  field(mandatory) PurchaseDesc,PurchaseStatus;
 
 mapping for zrishi_podoc{
 
@@ -23,12 +25,13 @@ ChangedBy = changed_date_time;
   }
 }
 
-//define behavior for ZI_RISHI_PurchaseItems_U //alias <alias_name>
-////late numbering
-////lock dependent by <association>
-////etag master <field_name>
-//{
-//  create;
-//  update;
-//  delete;
-//}
+define behavior for ZI_RISHI_PurchaseItems_U //alias <alias_name>
+
+//late numbering
+//lock dependent by <association>
+//etag master <field_name>
+{
+  create;
+  update;
+  delete;
+}

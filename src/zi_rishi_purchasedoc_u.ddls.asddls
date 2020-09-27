@@ -3,6 +3,8 @@
 @AbapCatalog.preserveKey: true
 @AccessControl.authorizationCheck: #CHECK
 @EndUserText.label: 'Purchase Doc Approval'
+@ObjectModel.semanticKey: ['PurchaseDocument']
+@ObjectModel.representativeKey: 'PurchaseDocument'
 define root view ZI_RISHI_PURCHASEDOC_U
   as select from ZI_Rishi_PurchaseDocTotalPrice
   composition[0..*] of ZI_RISHI_PurchaseItems_U as _PurchaseItems
