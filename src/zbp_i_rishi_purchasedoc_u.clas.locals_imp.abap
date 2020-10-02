@@ -3,6 +3,7 @@ CLASS lcl_trbuffer DEFINITION.
 
     CLASS-DATA: mt_create_purchasedoc TYPE TABLE OF zrishi_podoc.
     CLASS-DATA: mt_delete_purchasedoc TYPE TABLE OF zrishi_podoc.
+    CLASS-DATA: mt_update_purchasedoc TYPE TABLE OF zrishi_podoc.
 ENDCLASS.
 
 
@@ -15,8 +16,8 @@ CLASS lhc_ZI_RISHI_PURCHASEDOC_U DEFINITION INHERITING FROM cl_abap_behavior_han
     METHODS delete_purchaseorder FOR MODIFY
       IMPORTING it_delete_po FOR DELETE zi_rishi_purchasedoc_u.
 
-    METHODS update FOR MODIFY
-      IMPORTING entities FOR UPDATE zi_rishi_purchasedoc_u.
+    METHODS update_purchaseorder FOR MODIFY
+      IMPORTING it_update_po FOR UPDATE zi_rishi_purchasedoc_u.
 
     METHODS read FOR READ
       IMPORTING keys FOR READ zi_rishi_purchasedoc_u RESULT result.
@@ -92,7 +93,41 @@ CLASS lhc_ZI_RISHI_PURCHASEDOC_U IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-  METHOD update.
+  METHOD update_purchaseorder.
+
+    DATA: lt_update_purchase TYPE zrsh_if_rap_batch1=>tt_db_purchase.
+    DATA: lt_purchase_control TYPE  zrsh_if_rap_batch1=>tt_purchase_control.
+
+    DATA: lt_messages TYPE bapirettab.
+    DATA: lt_update_purchase_final TYPE TABLE OF zrishi_podoc.
+    DATA: ls_purchase_control TYPE zrsh_if_rap_batch1=>ts_purchase_control,
+          ls_purchase_update  TYPE zrishi_podoc.
+
+
+    LOOP AT it_update_po ASSIGNING FIELD-SYMBOL(<lfs_update_po>).
+
+      ls_purchase_control-purchasedocument = <lfs_update_po>-PurchaseDocument.
+      ls_purchase_control-purchasedesc = xsdbool( <lfs_update_po>-%control-PurchaseDesc = cl_abap_behv=>flag_changed ).
+      ls_purchase_control-currency = xsdbool( <lfs_update_po>-%control-Currency =  cl_abap_behv=>flag_changed ).
+      ls_purchase_control-purchaseprio = xsdbool( <lfs_update_po>-%control-PurchasePrio = cl_abap_behv=>flag_changed ).
+      ls_purchase_control-purchasestatus = xsdbool( <lfs_update_po>-%control-PurchaseStatus = cl_abap_behv=>flag_changed ).
+
+      ls_purchase_update = CORRESPONDING #( <lfs_update_po> MAPPING FROM ENTITY ).
+      APPEND ls_purchase_update TO lt_update_purchase.
+      APPEND ls_purchase_control TO lt_purchase_control.
+
+    ENDLOOP.
+
+
+    CALL FUNCTION 'ZRISHI_PURCHASE_UPDATE'
+      EXPORTING
+        it_purchase_doc     = lt_update_purchase
+        it_purchase_control = lt_purchase_control
+      IMPORTING
+        et_purchase_update  = lcl_trbuffer=>mt_update_purchasedoc
+        et_messages         = lt_messages.
+
+
   ENDMETHOD.
 
   METHOD read.
@@ -122,18 +157,12 @@ CLASS lsc_ZI_RISHI_PURCHASEDOC_U IMPLEMENTATION.
   METHOD save.
 
     "Purchase Document Create
-    IF lcl_trbuffer=>mt_create_purchasedoc IS NOT INITIAL.
-      CALL FUNCTION 'ZRISHI_PURCHASE_DATA_SAVE'
-        EXPORTING
-          it_purchase_create = lcl_trbuffer=>mt_create_purchasedoc.
-    ENDIF.
+    CALL FUNCTION 'ZRISHI_PURCHASE_DATA_SAVE'
+      EXPORTING
+        it_purchase_create = lcl_trbuffer=>mt_create_purchasedoc
+        it_purchase_delete = lcl_trbuffer=>mt_delete_purchasedoc
+        it_purchase_update = lcl_trbuffer=>mt_update_purchasedoc.
 
-    IF lcl_trbuffer=>mt_delete_purchasedoc IS NOT INITIAL.
-      "Purchase Document Delete
-      CALL FUNCTION 'ZRISHI_PURCHASE_DATA_SAVE'
-        EXPORTING
-          it_purchase_delete = lcl_trbuffer=>mt_delete_purchasedoc.
-    ENDIF.
 
   ENDMETHOD.
 
