@@ -8,6 +8,8 @@ FUNCTION zrishi_purchase_data_save.
 *"        ZRSH_IF_RAP_BATCH1=>TT_DB_PURCHASE
 *"     VALUE(IT_PURCHASE_UPDATE) TYPE
 *"        ZRSH_IF_RAP_BATCH1=>TT_DB_PURCHASE
+*"     VALUE(IT_PURCHASE_ITEMS) TYPE
+*"        ZRSH_IF_RAP_BATCH1=>TT_DB_PO_ITEMS
 *"----------------------------------------------------------------------
   IF it_purchase_create IS NOT INITIAL.
     INSERT zrishi_podoc FROM TABLE @it_purchase_create.
@@ -21,5 +23,8 @@ FUNCTION zrishi_purchase_data_save.
     UPDATE zrishi_podoc FROM TABLE @it_purchase_update.
   ENDIF.
 
+  IF it_purchase_items IS NOT INITIAL.
+    INSERT zrishi_poitem FROM TABLE @it_purchase_items.
+  ENDIF.
 
 ENDFUNCTION.

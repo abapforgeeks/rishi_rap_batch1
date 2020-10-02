@@ -1,0 +1,57 @@
+@Metadata.layer: #CORE
+annotate view Zc_RISHI_PURCHASEITEMS_U_V1 with
+{
+
+  @UI.facet: [
+
+  {
+
+  id:'Collectionfacet',
+  type: #COLLECTION,
+  purpose: #STANDARD,
+  label: 'Item Info'
+  },
+
+  {
+
+  id: 'ItemInfogroup1',
+  type: #FIELDGROUP_REFERENCE,
+  parentId: 'Collectionfacet',
+  label: 'Item Details',
+  purpose: #STANDARD,
+  targetQualifier: 'FieldGroup1'
+
+  }
+
+  ]
+    //ZC_Rishi_PurchaseItems
+  @UI.lineItem: [{ position: 10, label: 'Purchase Document',importance: #HIGH }]
+  @UI.fieldGroup: [{ position: 10 ,label: 'Purchase Document',qualifier: 'FieldGroup1'}]
+  PurchaseDocument;
+  @UI.fieldGroup: [{ position: 20 ,label: 'Purchase Item',qualifier: 'FieldGroup1'}]
+  @UI.lineItem: [{ position: 20, label: 'Item',importance: #HIGH }]
+  PurchaseItem;
+  @UI.fieldGroup: [{ position: 30 ,label: 'Description',qualifier: 'FieldGroup1'}]
+  @UI.lineItem: [{ position: 30, label: 'Description',importance: #HIGH }]
+  ItemDesc;
+  @UI.fieldGroup: [{ position: 40 ,label: 'Vendor',qualifier: 'FieldGroup1'}]
+  @UI.lineItem: [{ position: 40, label: 'Vendor',importance: #HIGH }]
+  Vendor;
+  @UI.fieldGroup: [{ position: 50 ,label: 'Price',qualifier: 'FieldGroup1'}]
+  @UI.lineItem: [{ position: 50, label: 'Price',importance: #HIGH }]
+  Price;
+  @UI.fieldGroup: [{ position: 60 ,label: 'Total Price',qualifier: 'FieldGroup1'}]
+  @UI.lineItem: [{ position: 60, label: 'Total Price',importance: #HIGH }]
+
+  TotalPrice;
+  @UI.fieldGroup: [{ position: 70 ,label: 'Currency',qualifier: 'FieldGroup1'}]
+  @UI.lineItem: [{ position: 70, label: 'Currency',importance: #HIGH }]
+  Currency;
+  @UI.fieldGroup: [{ position: 80 ,label: 'Quantity',qualifier: 'FieldGroup1'}]
+  @UI.identification: [{ position: 80 ,label: 'Quantity'}]
+  Quantity;
+  @UI.fieldGroup: [{ position: 90 ,label: 'unit',qualifier: 'FieldGroup1'}]
+  @UI.lineItem: [{ position: 90, label: 'unit',importance: #HIGH }]
+  Unit;
+
+}

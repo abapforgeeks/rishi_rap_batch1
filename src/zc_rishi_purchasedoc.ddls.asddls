@@ -3,13 +3,15 @@
 @Metadata.allowExtensions: true
 @Search.searchable: true
 
-define root view entity ZC_RISHI_PurchaseDoc as projection on ZI_RISHI_PURCHASEDOC_U {
-    //ZI_RISHI_PURCHASEDOC_U
-     //ZI_Rishi_PurchaseDocTotalPrice
+define root view entity ZC_RISHI_PurchaseDoc
+  as projection on ZI_RISHI_PURCHASEDOC_U
+{
+      //ZI_RISHI_PURCHASEDOC_U
+      //ZI_Rishi_PurchaseDocTotalPrice
       @ObjectModel.text.element: ['PurchaseDesc']
   key PurchaseDocument,
       TotalPrice,
-      
+
       @Consumption.valueHelpDefinition: [{ entity:{ name : 'I_Currency',element: 'Currency'} }]
       Currency,
       @Semantics.text: true
@@ -19,7 +21,7 @@ define root view entity ZC_RISHI_PurchaseDoc as projection on ZI_RISHI_PURCHASED
 
       @ObjectModel.text.element: ['StatusText']
       PurchaseStatus,
-      
+
       @Semantics.text: true
       _Status.text   as StatusText,
       @ObjectModel.text.element: ['PriorityText']
@@ -27,10 +29,10 @@ define root view entity ZC_RISHI_PurchaseDoc as projection on ZI_RISHI_PURCHASED
       @Semantics.text: true
 
       _Priority.text as PriorityText,
-      
+
       PoPriceCriticality,
       IsApprovalReqiored,
-      
+
       CreatedBy,
       CreatedOn,
       ChangedBy,
@@ -38,8 +40,8 @@ define root view entity ZC_RISHI_PurchaseDoc as projection on ZI_RISHI_PURCHASED
       //ZI_Rishi_PurchaseDocTotalPrice
       _Currency,
       _Priority,
-      _PurchaseItems,
+      _PurchaseItems :redirected to composition child Zc_RISHI_PURCHASEITEMS_U_V1,
       _Status
-    
-    
+
+
 }

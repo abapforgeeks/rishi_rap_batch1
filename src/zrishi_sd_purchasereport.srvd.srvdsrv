@@ -3,7 +3,7 @@ define service Zrishi_sd_purchasereport {
   expose ZI_Rishi_PurchaseDoc;
   expose ZI_Rishi_PurchaseItems;
   expose ZC_Rishi_PurchaseDocReport;
-  expose ZC_Rishi_PurchaseItems;
+  expose Zc_RISHI_PURCHASEITEMS_U_V1;
   expose ZI_Rishi_PurchaseStatus;
   expose zc_rishi_POStatusVH;
 }

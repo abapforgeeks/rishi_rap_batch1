@@ -1,0 +1,34 @@
+@Metadata.layer: #CORE
+annotate view ZC_Rishi_PurchaseItems with
+{
+  //ZC_Rishi_PurchaseItems
+  @UI.lineItem: [{ position: 10, label: 'Purchase Document',importance: #HIGH }]
+  @UI.identification: [{ position: 10 ,label: 'Purchase Document'}]
+  PurchaseDocument;
+  @UI.identification: [{ position: 20 ,label: 'Purchase Items'}]
+  @UI.lineItem: [{ position: 20, label: 'Purchase Document',importance: #HIGH }]
+  PurchaseItem;
+  @UI.identification: [{ position: 20 ,label: 'Item Description'}]
+  @UI.lineItem: [{ position: 30, label: 'Purchase Document',importance: #HIGH }]
+  ItemDesc;
+  @UI.lineItem: [{ position: 40, label: 'Purchase Document',importance: #HIGH }]
+  @UI.identification: [{ position: 30 ,label: 'Vendor'}]
+  Vendor;
+  @UI.lineItem: [{ position: 50, label: 'Purchase Document',importance: #HIGH }]
+  @UI.identification: [{ position: 40 ,label: 'Purchase Price'}]
+  Price;
+  @UI.lineItem: [{ position: 60, label: 'Purchase Document',importance: #HIGH }]
+  @UI.identification: [{ position: 50 ,label: 'Total Price'}]
+
+  TotalPrice;
+  @UI.lineItem: [{ position: 70, label: 'Purchase Document',importance: #HIGH }]
+  @UI.identification: [{ position: 60 ,label: 'Currency'}]
+  Currency;
+  @UI.lineItem: [{ position: 80, label: 'Purchase Document',importance: #HIGH }]
+  @UI.identification: [{ position: 70 ,label: 'Quantity'}]
+  Quantity;
+  @UI.lineItem: [{ position: 90, label: 'unit',importance: #HIGH }]
+  @UI.identification: [{ position: 80 ,label: 'Unit'}]
+  Unit;
+
+}

@@ -5,7 +5,8 @@ INTERFACE zrsh_if_rap_batch1
            INCLUDE TYPE zi_rishi_purchasedoc_u AS data.
   TYPES: END OF gty_purchase_doc.
 
-  TYPES: tt_db_purchase TYPE TABLE OF zrishi_podoc.
+  TYPES: tt_db_purchase TYPE TABLE OF zrishi_podoc,
+         tt_db_PO_ITEMS TYPE TABLE OF zrishi_poitem.
 
   TYPES: BEGIN OF gty_purchase_items.
            INCLUDE TYPE ZI_Rishi_PurchaseItems AS data.
