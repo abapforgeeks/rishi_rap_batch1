@@ -1,7 +1,6 @@
 unmanaged implementation in class zbp_i_rishi_purchasedoc_u unique;
 
 define behavior for ZI_RISHI_PURCHASEDOC_U //alias <alias_name>
-//late numbering
 //lock master
 //etag master <field_name>
 {
@@ -27,7 +26,6 @@ ChangedBy = changed_date_time;
 
 define behavior for ZI_RISHI_PurchaseItems_U //alias <alias_name>
 
-//late numbering
 //lock dependent by <association>
 //etag master <field_name>
 {

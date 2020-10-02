@@ -1,10 +1,7 @@
 CLASS lcl_trbuffer DEFINITION.
   PUBLIC SECTION.
-    TYPES: BEGIN OF lty_po_buffer.
-             INCLUDE TYPE zrishi_podoc AS data.
-    TYPES:   flag TYPE abap_boolean.
-    TYPES:    END OF lty_po_buffer.
-    CLASS-DATA: mt_purchasedoc_buffer TYPE TABLE OF lty_po_buffer.
+
+    CLASS-DATA: mt_create_purchasedoc TYPE TABLE OF zrishi_podoc.
 ENDCLASS.
 
 
@@ -28,56 +25,57 @@ ENDCLASS.
 CLASS lhc_ZI_RISHI_PURCHASEDOC_U IMPLEMENTATION.
 
   METHOD create_purchaseorder.
+    DATA: lt_messages TYPE bapirettab.
+    DATA: lt_purchase_buffer TYPE TABLE OF zi_rishi_purchasedoc_u.
+    DATA: ls_buffer TYPE zrishi_podoc.
 
-    DATA: ls_purchase_doc TYPE zrishi_podoc.
+    DATA(lv_cid) = it_purchase_docs[ 1 ]-%cid.
+    "Step1: Prepare Buffer table for purchase document based on the input data.
+    "Prepare Buffer table
+    CALL FUNCTION 'ZRISHI_PREPARE_PURCHASEDOC'
+      EXPORTING
+        it_purchase_docs = it_purchase_docs
+      IMPORTING
+        et_purchase_docs = lt_purchase_buffer
+        et_messages      = lt_messages.
+    "Step 2: Message Handling.
+    IF NOT line_exists( lt_messages[ type = 'E' ] ).
+      DATA(lv_purchase_doc) = lt_purchase_buffer[ 1 ]-PurchaseDocument.
+      "Step 3: Buffer Insert
+      "mapping CDS View data to DB table.
+      lcl_trbuffer=>mt_create_purchasedoc = CORRESPONDING #( lt_purchase_buffer MAPPING FROM ENTITY ).
+      APPEND VALUE #( %cid = lv_cid purchasedocument = lv_purchase_doc ) TO mapped-zi_rishi_purchasedoc_u.
+      DATA(lref_message) = NEW cl_abap_behv( )->new_message(
+                                                       id       =  'ZRISHI_MSG'
+                                                       number   = '001'
+                                                       severity = if_abap_behv_message=>severity-success ).
+      APPEND VALUE #( %cid = lv_cid purchasedocument = lv_purchase_doc  %msg = lref_message ) TO reported-zi_rishi_purchasedoc_u.
 
-    "Fetch already existing Purchase Order Number
-    SELECT MAX( po_document  ) FROM zrishi_podoc INTO @DATA(lv_max_pono).
-      DATA(lv_purchase_doc) = CONV zebeln( lv_max_pono + 1 ).
-*      lv_purchase_doc =  |{ lv_purchase_doc ALPHA = IN }|.
-      "Mapping CDS Tables to the back end table fields.
-      LOOP AT it_purchase_docs ASSIGNING FIELD-SYMBOL(<Lfs_podoc>).
-      ls_purchase_doc = CORRESPONDING #(  <lfs_podoc> MAPPING FROM ENTITY ).
-      "Update Date Time Information
-      GET TIME STAMP FIELD DATA(lv_create_change_time).
-      ls_purchase_doc-created_date_time = lv_create_change_time.
-      ls_purchase_doc-create_by = sy-uname.
-      ls_purchase_doc-changed_date_time = lv_create_change_time.
-      "increment PODOC.
-      ls_purchase_doc-po_document = condense( lv_purchase_doc ).
+    ELSE.
+      APPEND VALUE #( %cid = lv_cid purchasedocument = lv_purchase_doc ) TO failed-zi_rishi_purchasedoc_u.
 
-      "Buffering the transaction data, by adding flag 'C' Create Mode.
-      APPEND VALUE #( flag = 'C' data = CORRESPONDING #( ls_purchase_doc ) ) TO lcl_trbuffer=>mt_purchasedoc_buffer.
-      APPEND VALUE #( %cid = <lfs_podoc>-%cid purchasedocument = ls_purchase_doc-po_document  ) to mapped-zi_rishi_purchasedoc_u.
-        DATA(lref_message) = NEW cl_abap_behv( )->new_message(
-                                                        id       =  'ZRISHI_MSG'
-                                                        number   = '001'
-                                                        severity = if_abap_behv_message=>severity-success
-                                                          ).
-        APPEND VALUE #( %cid = <lfs_podoc>-%cid purchasedocument = lv_purchase_doc  %msg = lref_message ) TO reported-zi_rishi_purchasedoc_u.
+      lref_message = NEW cl_abap_behv( )->new_message(
+                                                       id       =  'ZRISHI_MSG'
+                                                       number   = '004'
+                                                       severity = if_abap_behv_message=>severity-error ).
+      APPEND VALUE #( %cid = lv_cid purchasedocument = lv_purchase_doc ) TO reported-zi_rishi_purchasedoc_u.
 
-    ENDLOOP.
+    ENDIF.
 
-*    DATA(lref_message) = NEW cl_abap_behv( )->new_message(
-*                                                    id       =  'ZRISHI_MSG'
-*                                                    number   = '001'
-*                                                    severity = if_abap_behv_message=>severity-success
-*                                                      ).
-*    APPEND VALUE #( %cid = ls_purchase_doc-po_document %msg = lref_message ) TO reported-zi_rishi_purchasedoc_u.
 
 
   ENDMETHOD.
 
   METHOD delete.
-    IF it_delete_po IS NOT INITIAL.
-
-      LOOP AT it_delete_po ASSIGNING FIELD-SYMBOL(<lfs_delete>).
-
-        DATA(lv_purchasedoc) = <lfs_delete>-PurchaseDocument.
-      ENDLOOP.
-
-      APPEND VALUE #( flag = 'D' po_document = lv_purchasedoc ) TO lcl_trbuffer=>mt_purchasedoc_buffer.
-    ENDIF.
+*    IF it_delete_po IS NOT INITIAL.
+*
+*      LOOP AT it_delete_po ASSIGNING FIELD-SYMBOL(<lfs_delete>).
+*
+*        DATA(lv_purchasedoc) = <lfs_delete>-PurchaseDocument.
+*      ENDLOOP.
+*
+*      APPEND VALUE #( flag = 'D' po_document = lv_purchasedoc ) TO lcl_trbuffer=>mt_purchasedoc_buffer.
+*    ENDIF.
   ENDMETHOD.
 
   METHOD update.
@@ -89,50 +87,35 @@ CLASS lhc_ZI_RISHI_PURCHASEDOC_U IMPLEMENTATION.
 ENDCLASS.
 
 CLASS lsc_ZI_RISHI_PURCHASEDOC_U DEFINITION INHERITING FROM cl_abap_behavior_saver.
-PROTECTED SECTION.
+  PROTECTED SECTION.
 
-  METHODS check_before_save REDEFINITION.
+    METHODS check_before_save REDEFINITION.
 
-  METHODS finalize          REDEFINITION.
+    METHODS finalize          REDEFINITION.
 
-  METHODS save              REDEFINITION.
+    METHODS save              REDEFINITION.
 
 ENDCLASS.
 
 CLASS lsc_ZI_RISHI_PURCHASEDOC_U IMPLEMENTATION.
 
-METHOD check_before_save.
-ENDMETHOD.
+  METHOD check_before_save.
+  ENDMETHOD.
 
-METHOD finalize.
-ENDMETHOD.
+  METHOD finalize.
+  ENDMETHOD.
 
-METHOD save.
-  DATA: LT_PURCHASE_create TYPE TABLE OF zrishi_podoc,
-        lt_purchase_delete TYPE TABLE OF zrishi_podoc.
-  IF lcl_trbuffer=>mt_purchasedoc_buffer IS NOT INITIAL.
-    "Create
-    lt_purchase_create = VALUE #( FOR  ls_podata IN lcl_trbuffer=>mt_purchasedoc_buffer WHERE ( flag = 'C' ) ( ls_podata-data ) ).
-    IF lt_purchase_create IS NOT INITIAL.
-      DATA(lv_purchase_doc) = lt_purchase_create[ 1 ]-po_document.
-      INSERT zrishi_podoc FROM TABLE @lt_purchase_create.
-      IF sy-subrc EQ 0.
-
-
-
-
-      ELSE.
-*        lref_message = NEW cl_abap_behv( )->new_message(
-*                                                        id       =  'ZRISHI_MSG'
-*                                                        number   = '002'
-*                                                        severity = if_abap_behv_message=>severity-success
-*                                                          ).
-
-      ENDIF.
-
+  METHOD save.
+    DATA: LT_PURCHASE_create TYPE TABLE OF zrishi_podoc,
+          lt_purchase_delete TYPE TABLE OF zrishi_podoc.
+    IF lcl_trbuffer=>mt_create_purchasedoc IS NOT INITIAL.
+      CALL FUNCTION 'ZRISHI_PURCHASE_DATA_SAVE'
+        EXPORTING
+          it_purchase_doc = lcl_trbuffer=>mt_create_purchasedoc.
     ENDIF.
+
     "Delete
-    lt_purchase_delete = VALUE #( FOR ls_podata IN lcl_trbuffer=>mt_purchasedoc_buffer WHERE ( flag = 'D' ) ( ls_podata-data ) ).
+*      lt_purchase_delete = VALUE #( FOR ls_podata IN lcl_trbuffer=>mt_purchasedoc_buffer WHERE ( flag = 'D' ) ( ls_podata-data ) ).
     IF lt_purchase_delete IS NOT INITIAL.
 
       DELETE zrishi_podoc FROM TABLE @lt_purchase_delete.
@@ -147,7 +130,7 @@ METHOD save.
 
       ENDIF.
     ENDIF.
-  ENDIF.
-ENDMETHOD.
+
+  ENDMETHOD.
 
 ENDCLASS.
