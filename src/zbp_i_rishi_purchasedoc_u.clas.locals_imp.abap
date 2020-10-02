@@ -109,7 +109,7 @@ CLASS lhc_ZI_RISHI_PURCHASEDOC_U IMPLEMENTATION.
 
 
     LOOP AT it_update_po ASSIGNING FIELD-SYMBOL(<lfs_update_po>).
-
+      DATA(lv_cid) = <lfs_update_po>-%cid_ref.
       ls_purchase_control-purchasedocument = <lfs_update_po>-PurchaseDocument.
       ls_purchase_control-purchasedesc = xsdbool( <lfs_update_po>-%control-PurchaseDesc = cl_abap_behv=>flag_changed ).
       ls_purchase_control-currency = xsdbool( <lfs_update_po>-%control-Currency =  cl_abap_behv=>flag_changed ).
@@ -130,11 +130,20 @@ CLASS lhc_ZI_RISHI_PURCHASEDOC_U IMPLEMENTATION.
       IMPORTING
         et_purchase_update  = lcl_trbuffer=>mt_update_purchasedoc
         et_messages         = lt_messages.
+    APPEND VALUE #( %cid = lv_cid purchasedocument = ls_purchase_update-po_document  ) TO mapped-purchaseheader.
 
-
+ DATA(lref_message) = NEW cl_abap_behv( )->new_message(
+                                                     id       =  'ZRISHI_MSG'
+                                                     number   = '007'
+                                                     severity = if_abap_behv_message=>severity-success
+                                                     v1 =  ls_purchase_update-po_document ).
+    APPEND VALUE #( %cid = lv_cid
+                     purchasedocument =  ls_purchase_update-po_document
+                      %msg = lref_message ) TO reported-purchaseheader.
   ENDMETHOD.
 
   METHOD read.
+  DATA(lv_text) = 'hello'.
   ENDMETHOD.
 
   METHOD create_header_item.
@@ -167,7 +176,7 @@ CLASS lhc_ZI_RISHI_PURCHASEDOC_U IMPLEMENTATION.
     APPEND VALUE #( %cid = lv_cid purchasedocument = lv_purchasedoc PurchaseItem = lv_item_no ) TO mapped-purchaseitems.
     DATA(lref_message) = NEW cl_abap_behv( )->new_message(
                                                      id       =  'ZRISHI_MSG'
-                                                     number   = '003'
+                                                     number   = '006'
                                                      severity = if_abap_behv_message=>severity-success
                                                      v1 = lv_purchasedoc ).
     APPEND VALUE #( %cid = lv_cid

@@ -22,7 +22,9 @@ FUNCTION zrishi_purchase_update.
 
       READ TABLE lt_purchase_db INTO DATA(ls_purchase_db) WITH KEY po_document = <lfs_purchase_current>-po_document.
       IF sy-subrc EQ 0.
-        APPEND INITIAL LINE TO et_purchase_update ASSIGNING FIELD-SYMBOL(<lfs_purchase_update>).
+        GET TIME STAMP FIELD DATA(lv_timestamp) .
+        ls_purchase_db-changed_date_time = lv_timestamp.
+        APPEND ls_purchase_db TO et_purchase_update ASSIGNING FIELD-SYMBOL(<lfs_purchase_update>).
       ENDIF.
       lv_index = 2.
       READ TABLE it_purchase_control INTO DATA(ls_purchase_control) WITH KEY PurchaseDocument = <lfs_purchase_current>-po_document.

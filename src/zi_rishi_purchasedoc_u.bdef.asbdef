@@ -2,7 +2,7 @@ unmanaged implementation in class zbp_i_rishi_purchasedoc_u unique;
 
 define behavior for ZI_RISHI_PURCHASEDOC_U alias PurchaseHeader
 //lock master
-//etag master <field_name>
+etag master ChangedBy
 {
 
   create;
