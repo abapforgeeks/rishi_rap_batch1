@@ -2,9 +2,11 @@
 @AccessControl.authorizationCheck: #CHECK
 @Metadata.allowExtensions: true
 @Search.searchable: true
-define root view entity ZC_RISHI_PO_VALDET_DEMO as projection on ZI_RISHI_po_valdet_demo_u {
-    //ZI_RISHI_PURCHASEDOC_U
-       @ObjectModel.text.element: ['PurchaseDesc']
+define root view entity ZC_RISHI_PO_VALDET_DEMO
+  as projection on ZI_RISHI_po_valdet_demo_u
+{
+      //ZI_RISHI_PURCHASEDOC_U
+      @ObjectModel.text.element: ['PurchaseDesc']
   key PurchaseDocument,
       TotalPrice,
       Currency,
@@ -36,6 +38,5 @@ define root view entity ZC_RISHI_PO_VALDET_DEMO as projection on ZI_RISHI_po_val
       //ZI_Rishi_PurchaseDocTotalPrice
       _Currency,
       _Priority,
-      _PurchaseItems,
       _Status
 }
