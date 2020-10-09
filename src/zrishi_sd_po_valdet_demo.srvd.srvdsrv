@@ -1,0 +1,6 @@
+@EndUserText.label: 'Demo on Validations and Determinations'
+define service Zrishi_sd_po_valdet_demo {
+  expose ZC_RISHI_PO_VALDET_DEMO;
+  expose ZI_RISHI_po_valdet_demo_u;
+  expose zc_rishi_POStatusVH;
+}

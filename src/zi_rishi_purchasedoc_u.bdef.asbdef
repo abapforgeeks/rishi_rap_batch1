@@ -10,7 +10,8 @@ etag master ChangedBy
   delete;
   field ( readonly ) PurchaseDocument, TotalPrice, Currency;
   field ( mandatory ) PurchaseDesc, PurchaseStatus;
-
+//  validation validateStatus on save { field PurchaseStatus; }
+//determination determineKeys on modify {create;}
   association _PurchaseItems { create; }
   mapping for zrishi_podoc
   {

@@ -50,6 +50,12 @@
      <MSGNR>007</MSGNR>
      <TEXT>Update Succesful</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZRISHI_MSG</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Invalid Status</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>
