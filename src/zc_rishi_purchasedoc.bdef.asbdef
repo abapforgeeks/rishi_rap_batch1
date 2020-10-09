@@ -6,7 +6,9 @@ define behavior for ZC_RISHI_PurchaseDoc //alias <alias_name>
   use update;
   use delete;
   field ( readonly ) PurchaseDocument, CreatedBy, CreatedOn, Currency, TotalPrice;
+  field( mandatory: create ) PurchaseStatus;
   use association _PurchaseItems { create; }
+
 
 }
 
